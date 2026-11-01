@@ -15,12 +15,16 @@ def load_data():
 
 df = load_data()
 
-# 2. Features aur Target define karna
-X = df[['study_hours', 'attendance_percent', 'previous_score', 'sleep_hours']]
-y = df['exam_score']
-
-# Missing values fill karna
+# 2. Sirf numeric columns lena taake median mein koi error na aaye
+features = ['study_hours', 'attendance_percent', 'previous_score', 'sleep_hours']
+X = df[features].apply(pd.to_numeric, errors='coerce')
 X = X.fillna(X.median())
+y = pd.to_numeric(df['exam_score'], errors='coerce')
+
+# Missing target values drop karna agar koi hon
+valid_idx = y.notna()
+X = X[valid_idx]
+y = y[valid_idx]
 
 # Model Train karna
 model = RandomForestRegressor(random_state=42)
