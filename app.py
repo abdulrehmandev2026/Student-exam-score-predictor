@@ -9,27 +9,9 @@ st.set_page_config(
     layout="centered"
 )
 
-# Custom CSS for background gradient and professional form styling
-st.markdown("""
-    <style>
-    .stApp {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    }
-    .main-header {
-        color: #2c3e50;
-        text-align: center;
-        font-weight: bold;
-    }
-    .sub-text {
-        text-align: center;
-        color: #555;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-# Title and description
-st.markdown("<h1 class='main-header'>🎓 Student Exam Score Predictor</h1>", unsafe_allow_html=True)
-st.markdown("<p class='sub-text'>Please fill out the required fields below to predict the expected student exam score using Machine Learning.</p>", unsafe_allow_html=True)
+# Title and description (Default background)
+st.title("🎓 Student Exam Score Predictor")
+st.markdown("Please fill out the form below with the required student details to predict the expected exam score using Machine Learning.")
 
 # 1. Load dataset securely
 @st.cache_data
@@ -54,18 +36,17 @@ y = y[valid_idx]
 model = RandomForestRegressor(random_state=42)
 model.fit(X, y)
 
-# 3. Professional Form Style with Required Markers (*)
+# 3. Form with Number Inputs (Type instead of drag) and Required markers
 st.markdown("---")
 with st.form("exam_prediction_form"):
-    st.subheader("📋 Student Performance Details Form")
+    st.subheader("📋 Student Performance Form")
     st.markdown("Fields marked with <span style='color:red;'>*</span> are required.", unsafe_allow_html=True)
     
-    study_hours = st.slider("Daily Study Hours <span style='color:red;'>*</span>", 1.0, 10.0, 5.0, help="Required field")
-    attendance_percent = st.slider("Attendance Percentage (%) <span style='color:red;'>*</span>", 50.0, 100.0, 80.0, help="Required field")
-    previous_score = st.slider("Previous Exam Score <span style='color:red;'>*</span>", 30.0, 100.0, 70.0, help="Required field")
-    sleep_hours = st.slider("Daily Sleep Hours <span style='color:red;'>*</span>", 4.0, 10.0, 7.0, help="Required field")
+    study_hours = st.number_input("Daily Study Hours *", min_value=1.0, max_value=10.0, value=5.0, step=0.5)
+    attendance_percent = st.number_input("Attendance Percentage (%) *", min_value=50.0, max_value=100.0, value=80.0, step=1.0)
+    previous_score = st.number_input("Previous Exam Score *", min_value=30.0, max_value=100.0, value=70.0, step=1.0)
+    sleep_hours = st.number_input("Daily Sleep Hours *", min_value=4.0, max_value=10.0, value=7.0, step=0.5)
     
-    # Form Submit Button
     submitted = st.form_submit_button("🔮 Predict Exam Score", use_container_width=True)
 
 if submitted:
@@ -80,3 +61,7 @@ if submitted:
     
     st.markdown("---")
     st.success(f"### 🎉 Expected Exam Score: **{round(prediction[0], 2)} / 100**")
+
+# Made by tag in the corner
+st.markdown("---")
+st.markdown("<p style='text-align: right; color: gray; font-size: 13px;'>Made by Abdul Rehman</p>", unsafe_allow_html=True)
